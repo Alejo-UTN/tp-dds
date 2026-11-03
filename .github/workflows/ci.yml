@@ -1,4 +1,4 @@
-name: CI - Docker, GHCR y Docker Hub
+name: CI/CD - Docker, GHCR, Docker Hub y Render
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  build-push-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
@@ -39,3 +39,6 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/dds-devops:${{ env.sha_short }}
             ${{ secrets.DOCKERHUB_USERNAME }}/dds-devops:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/dds-devops:${{ env.sha_short }}
+
+      - name: Disparar despliegue en Render
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
